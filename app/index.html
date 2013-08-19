@@ -6,19 +6,23 @@
   <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body>
-  <ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
-  </ul>
+  <header id="docs-bars">
+    <h1>Schedule Tool</h1>
+    <div id="docs-toolbar-wrapper">Angular seed app: v<span app-version></span></div>
+    <ul id="docs-menubars" class="menu">
+      <li><a href="#/home">HOME</a></li>
+      <li><a href="#/view1">view1</a></li>
+      <li><a href="#/view2">view2</a></li>
+    </ul>
+  </header>
 
-  <div ng-view></div>
+  <ng-view></ng-view>
 
-  <div>Angular seed app: v<span app-version></span></div>
-
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-  -->
-  <script src="lib/angular/angular.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script src="lib/jquery/jquery.mousewheel.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular-resource.js"></script>  
+  <!-- <script src="lib/angular/angular.js"></script> -->
   <script src="js/app.js"></script>
   <script src="js/services.js"></script>
   <script src="js/controllers.js"></script>

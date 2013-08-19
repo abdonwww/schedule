@@ -1,0 +1,53 @@
+<div ng-mouseout="tableReset()" ng-scroll>
+<!-- <date-cell></date-cell> -->
+<p>Left: {{left}}</p>
+<p>Top: {{top}}</p>
+<div id="origin">
+	<table>
+		<tbody>
+			<tr>
+				<th>&nbsp;</th>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="x-axis">
+	<table>
+		<tbody>
+			<tr>
+				<td ng-repeat="date in dates"
+					ng-class="{hover: ($index == colNum)}">{{date.date}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="rows" ng-init="initHome()" style="height: {{rowHeight}}px;">
+	<div id="y-axis">
+		<table>
+			<tbody>
+				<tr ng-repeat="member in members"
+					ng-class="{hover: ($index == rowNum)}">
+					<th>{{member.name}}</th>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="cells">
+		<table>
+			<col ng-repeat="date in dates"
+				ng-class="{saturday: (date.day == 'Sat'), sunday: (date.day == 'Sun'), hover: ($index == colNum)}">
+			<tbody>
+				<tr ng-repeat="member in members"
+					ng-mouseover="rowRef($index)"
+					ng-class="{hover: ($index == rowNum)}">
+					<td ng-repeat="date in member.schedule"
+						ng-mouseover="colRef($index)"
+						contenteditable="true">{{date.date}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+</div>
