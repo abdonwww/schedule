@@ -9,7 +9,7 @@ angular.module('myApp.directives', []).
       elm.text(version);
     };
   }])
-  .directive('dateCell', [function factory(injectables) {
+  .directive('dateCell', [function() {
     var directiveDefinitionObject = {
       restrict: 'E',
       replace: true,
@@ -17,33 +17,80 @@ angular.module('myApp.directives', []).
     };
     return directiveDefinitionObject;
   }])
-  .directive('ngScroll', ['$window', function factory($window) {
-    var top = 0,
-        left = 0;
-
+  .directive('ngWindowResize', ['$window', '$timeout', function($window, $timeout) {
     return function(scope, element, attr) {
-      var header = angular.element('#x-axis').get(0);
-      var body = angular.element('#rows').get(0);
-      var cells = angular.element('#cells').get(0);
-
-      element.bind('mousewheel', function(e, delta, deltaX, deltaY) {
-        left += deltaX;
-        top -= deltaY;
-
-        left = left > 0 ? left : 0;
-        top = top > 0 ? top : 0;
-
-        scope.left = left;
-        scope.top = top;
-
-        header.scrollLeft = left;
-        cells.scrollLeft = left;
-        body.scrollTop = top;
-
-        e.preventDefault();
-        
+      angular.element($window).bind('resize', function(){
+          $timeout(function() {
+            scope.$eval(attr.ngWindowResize);
+          }, 0);
       });
     };
+  }])
+  .directive('ngLoad', ['$timeout', function($timeout) {
+    return function(scope, element, attr) {
+      if (scope.$last){
+        $timeout(function(){
+          scope.$emit('dataLoaded')
+        }, 0);
+      }
+    };
+  }])
+  .directive('ngWheelScroller', [function() {
+    return function(scope, element, attr) {
+      var xAxis = angular.element('[ng-wheel-col]');
+      var yAxis = angular.element('[ng-wheel-row]');
+
+      element.bind('scroll', function(e){
+        scope.scrollLeft = element.scrollLeft()
+        scope.scrollTop = element.scrollTop()
+        xAxis.prop('scrollLeft', scope.scrollLeft);
+        yAxis.prop('scrollTop', scope.scrollTop);
+        scope.$eval(attr.ngScroll);
+      });
+    };
+  }])
+  .directive('ngWheelTable', [function() {
+    var directiveDefinitionObject = {
+      priority: -1,
+      link: function postLink(scope, element, attr) {
+
+        var xAxis = angular.element('[ng-wheel-col]');
+        var yAxis = angular.element('[ng-wheel-row]');
+        scope.scrollLeft = 0;
+        scope.scrollTop = 0;
+
+        scope.$on('dataLoaded', function(){
+          scope.scrollWidth = xAxis.prop('scrollWidth');
+          scope.scrollHeight = yAxis.prop('scrollHeight');
+          scope.maxLeft = scope.scrollWidth - xAxis.prop('clientWidth');
+          scope.maxTop = scope.scrollHeight - yAxis.prop('clientHeight');
+        });
+
+        element.bind('mousewheel', function(e, delta, deltaX, deltaY) {
+
+          scope.scrollWidth = xAxis.prop('scrollWidth');
+          scope.scrollHeight = yAxis.prop('scrollHeight');
+
+          scope.maxLeft = xAxis.prop('scrollWidth') - xAxis.prop('clientWidth');
+          scope.maxTop = yAxis.prop('scrollHeight') - yAxis.prop('clientHeight');
+
+          scope.scrollLeft += deltaX;
+          scope.scrollTop -= deltaY;
+
+          scope.scrollLeft = scope.scrollLeft > 0 ? scope.scrollLeft : 0;
+          scope.scrollLeft = scope.scrollLeft < scope.maxLeft ? scope.scrollLeft : scope.maxLeft;
+          scope.scrollTop = scope.scrollTop > 0 ? scope.scrollTop : 0;
+          scope.scrollTop = scope.scrollTop < scope.maxTop ? scope.scrollTop : scope.maxTop;
+
+          xAxis.prop('scrollLeft', scope.scrollLeft);
+          yAxis.prop('scrollTop', scope.scrollTop);
+
+          e.preventDefault();
+          
+        });
+      }
+    };
+    return directiveDefinitionObject;
   }]);
 
 

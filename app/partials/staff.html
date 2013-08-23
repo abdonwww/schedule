@@ -1,0 +1,86 @@
+
+<!-- <date-cell></date-cell> -->
+<p id="searchBox"><input type="text" placeholder="Search" ng-model="query"> Period: <input type="date" name="range-from" ng-attr-value="{{timeInfo.from | date:'yyyy-MM-dd'}}"> - <input type="date" name="range-to" ng-attr-value="{{timeInfo.to | date:'yyyy-MM-dd'}}"></p>
+
+<section id="spreadsheet" ng-wheel-table ng-mouseout="tableReset()" ng-attr-style="width: {{colWidth}}px;">
+	<header id="spreadsheet-header">
+		<div id="o-axis">
+			<table>
+				<tbody>
+					<tr class="project-row">
+						<th class="project-name"><span>Project</span></th>
+						<th>Director</th>
+						<th>Start</th>
+						<th>Delivery</th>
+						<th>Costs</th>
+						<th class="project-id">EYES</th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="x-axis" ng-wheel-col>
+			<table>
+				<tbody>
+					<tr>
+						<td ng-repeat="date in dates"
+							ng-class="{hover: ($index == colNum)}">{{date.date}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</header>
+	<div id="spreadsheet-body">
+		<div id="spreadsheet-data-rows" ng-wheel-row ng-init="tableResize()" ng-window-resize="tableResize()" style="height: {{rowHeight}}px;">
+			<div id="y-axis">
+				<table>
+					<tbody>
+						<tr ng-repeat-start="member in members | filter:query"
+							ng-class="{hover: ($index == rowNum)}"
+							class="profile-row">
+							<th class="profile-name" colspan="6"><strong>{{member.name}} 工数の日計</strong></th>
+						</tr>
+						<tr ng-repeat="project in member.projects"
+							ng-class="{hover: ($index == rowNum)}"
+							class="project-row">
+							<th class="project-name"><strong>{{project.name}}</strong></th>
+							<th>{{project.director}}</th>
+							<th>{{project.start}}</th>
+							<th>{{project.delivery}}</th>
+							<th>{{project.cost}}</th>
+							<th class="project-id">{{project.eyesId}}</th>
+						</tr>
+						<tr ng-repeat-end  colspan="6" style="display: none;"><th></th></tr>
+					</tbody>
+				</table>
+			</div>
+			<div id="data-cells" ng-wheel-col>
+				<table>
+					<col ng-repeat="date in dates"
+						ng-class="{saturday: (date.day == 'Sat'), sunday: (date.day == 'Sun'), hover: ($index == colNum)}">
+					<tbody>
+						<tr ng-repeat-start="member in members | filter:query"
+							ng-mouseover="rowRef($index)"
+							ng-class="{hover: ($index == rowNum)}"
+							class="profile-row">
+							<td ng-repeat="date in member.schedule"
+								ng-mouseover="colRef($index)">{{date.date}}</td>
+						</tr>
+						<tr ng-repeat="project in member.projects"
+							ng-mouseover="rowRef($index)"
+							ng-class="{hover: ($index == rowNum)}"
+							ng-load
+							class="project-row">
+							<td ng-repeat="date in project.schedule"
+								ng-mouseover="colRef($index)"
+								contenteditable="true">{{date.date}}</td>
+						</tr>
+						<tr ng-repeat-end style="display: none;"><td ng-attr-colspan="{{member.schedule.length}}"></td></tr>
+					</tbody>
+				</table>
+			</div>
+		<!-- /#spreadsheet-data-rows --></div>
+		<div id="spreadsheet-scrollbar" ng-wheel-scroller ng-wheel-col ng-wheel-row ng-attr-style="width: {{colWidth - 625 + 15}}px; height: {{rowHeight + 16}}px;">
+			<div ng-attr-style="width: {{scrollWidth}}px; height: {{scrollHeight}}px;"></div>
+		</div>
+	<!-- /#spreadsheet-body --></div>
+</section>

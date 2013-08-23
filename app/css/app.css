@@ -29,112 +29,188 @@
 
 html,
 body {
-  font-family: 'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif;
-  font-size: 92%;
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
+}
+
+body {
+  line-height: 1;
+  background: url(https://cwdfs02/sagas/common/img/bg.jpg);
+  font-family: Meiryo UI, Arial, sans-serif;
+  font-size: 12px;
+}
+
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+::-webkit-scrollbar-thumb {
+  background: #666;
+  -webkit-border-radius: 0;
+}
+::-webkit-scrollbar-corner {
+  border: 1px solid #ccc;
+  background: #fff;
 }
 
 /* docs-bars */
 #docs-bars {
-  height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  background: -webkit-linear-gradient(bottom, #183152, #18314f);
 }
 #docs-bars h1 {
-  float: right;
+  float: left;
   margin: 0;
-  padding: 10px;
-  font-size: 100%;
-}
-
-#docs-bars #docs-toolbar-wrapper {
-  padding: 5px 5px 0px 5px;
+  padding: 5px 0 5px 15px;
+  font-size: 18px;
+  font-weight: normal;
+  text-shadow: 1px 1px 0px #212121;
+  color: #FFF;
 }
 #docs-bars #docs-menubars {
+  float: right;
   margin: 0;
   padding: 5px;
 }
 
 
-/* table */
-#origin tr,
-#x-axis tr,
-#y-axis tr {
-  background-color: #f0f0f0;
-  font-weight: bold;
+#docs-view {
+  padding-top:30px;
 }
 
-#x-axis {
+
+#searchBox {
+  margin: 5px 15px;
+  padding: 0;
+}
+
+/**
+  #spreadsheet
+*/
+#spreadsheet-body {
+  position: relative;
+}
+#spreadsheet-scrollbar {
+  position: absolute;
+  left: 624px;
+  top: -1px;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  z-index: 1;
+}
+#spreadsheet-data-rows {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-bottom: 1px #ccc solid;
+  z-index: 2;
+}
+
+
+
+
+
+#o-axis tr,
+#x-axis tr {
+  background: -webkit-linear-gradient(top, #7d7e7d, #0e0e0e);
+  text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+  color: #FFF;
+}
+
+#y-axis tr.profile-row th,
+#data-cells tr.profile-row td {
+  background: -webkit-linear-gradient(top, #dcdcdc 0%, #dbdbdb 50%, #dddddd 51%, #ffffff 100%);
+}
+
+#x-axis,
+#o-axis {
   overflow: hidden;
   position: relative;
-  margin-left: 150px;
-  border: 1px #ccc solid;
-  border-color: rgba(0,0,0,0.2);
-  border-width: 1px 0 0 0;
+  border-top: 1px rgba(0,0,0,0.2) solid;
 }
 
-#x-axis table {
-  
-}
-
-
-
-#origin {
-  float: left;
-  width: 150px;
-}
-
-#origin table {
-  border: 1px #ccc solid;
-  border-color: rgba(0,0,0,0.2);
-  border-width: 1px 1px 1px 0;
-}
-
-
-#rows {
-  overflow-x: hidden;
-  overflow-y: hidden;
-  height: 400px;
-  border: 1px #ccc solid;
-  border-color: rgba(0,0,0,0.2);
-  border-width: 0 0 1px 0;
-}
+#o-axis,
 #y-axis {
   float: left;
-  width: 150px;
+  width: 625px;
 }
-#cells {
+#o-axis table,
+#y-axis table {
+  width: 625px;
+}
+#x-axis,
+#data-cells {
   overflow-x: hidden;
   overflow-y: hidden;
   position: relative;
-  margin-left: 150px;
+  margin-left: 625px;
+  border-right: 1px #ccc solid;
+}
+#x-axis table,
+#data-cells table {
+  table-layout: fixed;
 }
 
+
 table {
-  table-layout: fixed;
   width: 0;
   border-collapse: collapse;
   border-spacing: 0;
+  background-color: #FFF;
 }
 
 
-th {
-  width: 143px;
-  text-align: right;
-}
 td {
   width: 50px;
   text-align: center;
 }
 th, td {
+  padding: 6px 0;
   border: 1px #ccc solid;
-  border-color: rgba(0,0,0,0.2);
+  border-color: #ccc;
   border-width: 0 1px 1px 0;
   vertical-align: bottom;
-  padding: 6px 3px;
+  font-weight: normal;
+  white-space:nowrap;
   cursor: default;
 }
+
+
+
+th.profile-name {
+  text-align: left;
+}
+th.profile-name strong {
+  margin-left: 10px;
+}
+tr.project-row th {
+  width: 59px;
+}
+tr.project-row th.project-id {
+  width: 74px;
+}
+tr.project-row th.project-name {
+  width: 288px;
+  text-align: left;
+}
+tr.project-row th.project-name span {
+  margin-left: 10px;
+}
+tr.project-row th.project-name strong {
+  margin-left: 20px;
+}
+
+
 
 col.saturday {
   background-color: #CCDDFF;
@@ -146,8 +222,10 @@ col.sunday {
 #x-axis td.hover,
 col.hover {
   background-color: #F7FFAD;
+  color: #000;
 }
 #y-axis tr.hover th,
 tr.hover td {
   background-color: #F7FFAD;
+  color: #000;
 }
